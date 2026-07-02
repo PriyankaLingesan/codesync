@@ -13,7 +13,7 @@ export interface Config {
 export function loadConfig(): Config {
   return {
     host: process.env.SERVER_HOST ?? "0.0.0.0",
-    port: Number(process.env.SERVER_PORT ?? 4000),
+    port: Number(process.env.PORT ?? process.env.SERVER_PORT ?? 4000),
     databaseUrl:
       process.env.DATABASE_URL ??
       "postgres://codesync:codesync@localhost:5432/codesync",
