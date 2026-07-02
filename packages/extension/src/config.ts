@@ -13,7 +13,10 @@ export interface ExtensionConfig {
 /** Read and normalize CodeSync settings from VS Code configuration. */
 export function readConfig(): ExtensionConfig {
   const cfg = vscode.workspace.getConfiguration("codesync");
-  const serverUrlWs = (cfg.get<string>("serverUrl") ?? "ws://localhost:4000").replace(
+  const serverUrlWs = (
+  cfg.get<string>("serverUrl") ??
+  "wss://codesync-mmux.onrender.com"
+).replace(
     /\/+$/,
     ""
   );
