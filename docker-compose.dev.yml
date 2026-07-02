@@ -1,0 +1,22 @@
+# Dev-only Postgres so the schema in packages/server/db/schema.sql can be
+# created and tested locally. Production Docker/CI setup arrives in Phase 6.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: codesync-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-codesync}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-codesync}
+      POSTGRES_DB: ${POSTGRES_DB:-codesync}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ./.pgdata:/var/lib/postgresql/data
+      # Auto-loads the schema on first container start (empty volume only).
+      - ./packages/server/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-codesync} -d ${POSTGRES_DB:-codesync}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

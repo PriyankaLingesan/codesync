@@ -1,0 +1,31 @@
+{
+  "name": "codesync",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Google Docs-style real-time collaborative coding inside VS Code.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/shared",
+    "packages/server",
+    "packages/extension",
+    "packages/webview-ui"
+  ],
+  "scripts": {
+    "build:shared": "npm run build --workspace @codesync/shared",
+    "build:webviews": "npm run build --workspace @codesync/webview-ui",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "npm run clean --workspaces --if-present",
+    "db:up": "docker compose -f docker-compose.dev.yml up -d",
+    "db:down": "docker compose -f docker-compose.dev.yml down"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^2.0.5"
+  }
+}

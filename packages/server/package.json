@@ -1,0 +1,31 @@
+{
+  "name": "@codesync/server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CodeSync collaboration server: Fastify + WebSocket + Yjs + Postgres.",
+  "type": "module",
+  "main": "./dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist",
+    "dev": "node --watch dist/main.js",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@codesync/shared": "*",
+    "@fastify/websocket": "^10.0.1",
+    "fastify": "^4.28.1",
+    "pg": "^8.12.0",
+    "ws": "^8.18.0",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.18"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/pg": "^8.11.6",
+    "@types/ws": "^8.5.10",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  }
+}

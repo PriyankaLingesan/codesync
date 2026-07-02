@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: codesync
+          POSTGRES_PASSWORD: codesync
+          POSTGRES_DB: codesync
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U codesync -d codesync"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://codesync:codesync@localhost:5432/codesync
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build shared package
+        run: npm run build:shared
+
+      - name: Load database schema
+        run: |
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+          PGPASSWORD=codesync psql -h localhost -U codesync -d codesync \
+            -f packages/server/db/schema.sql
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test (unit + integration)
+        run: npm test
+
+      - name: Build all packages
+        run: npm run build

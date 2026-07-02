@@ -1,0 +1,72 @@
+{
+  "name": "codesync-vscode",
+  "displayName": "CodeSync — Realtime Collaborative Coding",
+  "description": "Google Docs-style real-time collaboration inside VS Code: shared rooms, live cursors, presence, chat, and codebase visualization.",
+  "version": "0.1.0",
+  "publisher": "codesync",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0",
+    "node": ">=20"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onView:codesync.presence", "onView:codesync.activity", "onView:codesync.chat"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "codesync.createRoom", "title": "CodeSync: Create Collaboration Room" },
+      { "command": "codesync.joinRoom", "title": "CodeSync: Join Collaboration Room" },
+      { "command": "codesync.leaveRoom", "title": "CodeSync: Leave Collaboration Room" },
+      { "command": "codesync.showGraph", "title": "CodeSync: Show Dependency Graph" }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "codesync", "title": "CodeSync", "icon": "resources/codesync.svg" }
+      ]
+    },
+    "views": {
+      "codesync": [
+        { "id": "codesync.presence", "name": "Collaborators", "type": "webview" },
+        { "id": "codesync.activity", "name": "Activity", "type": "webview" },
+        { "id": "codesync.chat", "name": "Chat", "type": "webview" }
+      ]
+    },
+    "configuration": {
+      "title": "CodeSync",
+      "properties": {
+        "codesync.serverUrl": {
+          "type": "string",
+          "default": "ws://localhost:4000",
+          "description": "URL of the CodeSync collaboration server."
+        },
+        "codesync.displayName": {
+          "type": "string",
+          "default": "",
+          "description": "Name shown to collaborators. Defaults to your OS username if empty."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "clean": "rimraf dist media",
+    "vscode:prepublish": "npm run build"
+  },
+  "dependencies": {
+    "@codesync/shared": "*",
+    "ws": "^8.18.0",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.18"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "@types/vscode": "^1.90.0",
+    "@types/ws": "^8.5.10",
+    "esbuild": "^0.23.0",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  }
+}

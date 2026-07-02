@@ -1,0 +1,25 @@
+{
+  "name": "@codesync/webview-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "React webviews for CodeSync (presence, activity, chat, graph).",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@codesync/shared": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.3"
+  }
+}

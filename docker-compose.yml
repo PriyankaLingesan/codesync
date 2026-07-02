@@ -1,0 +1,39 @@
+# Production-style stack: Postgres + the CodeSync server, built from source.
+# For local dev of just the database, use docker-compose.dev.yml instead.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: codesync-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-codesync}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-codesync}
+      POSTGRES_DB: ${POSTGRES_DB:-codesync}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./packages/server/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-codesync} -d ${POSTGRES_DB:-codesync}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    container_name: codesync-server
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-codesync}:${POSTGRES_PASSWORD:-codesync}@postgres:5432/${POSTGRES_DB:-codesync}
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 4000
+      SNAPSHOT_DEBOUNCE_MS: 10000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+
+volumes:
+  pgdata:

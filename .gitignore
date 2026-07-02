@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+*.vsix
+*.tsbuildinfo
+
+# Env
+.env
+.env.local
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode-test/
+coverage/
+
+# Postgres data (dev docker volume)
+.pgdata/
+
+# Webview build output (emitted by webview-ui)
+packages/extension/media/
